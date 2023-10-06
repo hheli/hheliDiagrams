@@ -1,4 +1,10 @@
 @startuml
+' hide the spot
+' hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
 entity "REP_SUBJ" as REP_SUBJ {
     "Кредитные организации"
     --
@@ -77,6 +83,19 @@ entity "BO_F0409727_R1" as BO_F0409727_R1{
     "Сумма оборотов по дебету счета в ед. валюты"
     
  }
+
+REP_SUBJ }|--o{BO_F0409727_R1
+REP_SUBJ }|--o{BO_F0409727_R1_IS
+REP_SUBJ }|--o{BO_F0409727_R2
+REP_SUBJ }|--o{BO_F0409727_R3
+MSR_PRD  }|--o{BO_F0409727_R1
+MSR_PRD  }|--o{BO_F0409727_R1_IS
+MSR_PRD  }|--o{BO_F0409727_R2
+MSR_PRD  }|--o{BO_F0409727_R3
+REP  }|--o{BO_F0409727_R1 : "REP_ID"
+REP  }|--o{BO_F0409727_R1_IS
+REP  }|--o{BO_F0409727_R2
+REP  }|--o{BO_F0409727_R3
 
 
 @enduml
