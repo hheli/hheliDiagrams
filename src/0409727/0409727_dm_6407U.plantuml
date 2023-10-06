@@ -11,6 +11,12 @@ entity "REP_SUBJ" as REP_SUBJ {
     *IP_ID <<PK>>
     ... "атрибуты КО"
 }
+entity "TU_CBR" as TU_CBR {
+    "Структурные подразделения Банка России"
+    --
+    * TU_ID <<PK>>
+    ... "атрибуты СПБР"
+}
 entity "MSR_PRD" as MSR_PRD {
     "Календарь"
     --
