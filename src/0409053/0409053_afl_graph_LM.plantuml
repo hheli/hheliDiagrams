@@ -1,0 +1,18 @@
+@startuml
+entity "аfl" as afl {
+    "Аффилированное лицо"
+    --
+     уникальный код
+     тип лица
+     наименование
+     % акций
+} 
+entity "affiliate" as affiliate {
+    "Связь аффилированных лиц"
+    --
+    код основания   
+
+}
+ 
+afl->afl: affiliate 
+@enduml
