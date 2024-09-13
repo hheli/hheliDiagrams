@@ -1,0 +1,28 @@
+@startuml
+actor "Пользователь" as user order 10
+
+
+participant "<b>МПСО/СИГМА</b>\nссылка на запуск отчета в НИКА по ID_SOURCE" as mpsordrlink order 20
+participant "<b>НИКА</b>\n отчет\nдля выбора\nпо ID_SOURCE" as nikastartlink order 40
+participant "Пакет\n<b>PKG_DATA_FILES</b>\nOAD" as nikaPackage order 50
+participant "Пакет\n<b>some_pkgs?</b>\nKHD" as emvPackages order 60
+database  "БД\n(DM_RCO_DATA)" as database2 order 90
+database  "БД\n(OSD_DM)" as database order 100
+participant "<b>Framework ETL</b>" as FrameworkEtl order 70
+
+user->mpsordrlink: Клик по ссылке в РО или по ссылке в интерфейсе
+mpsordrlink->nikastartlink: переадресация на отчет/ссылку в НИКА уже с ID (URL-report\{id=ID})
+activate nikastartlink
+nikastartlink->nikaPackage: вызов пакета в ОАД
+nikaPackage->emvPackages: вызов пакета(ов) ЕМВ
+->FrameworkEtl: вызов URI-resource\{id=ID}
+FrameworkEtl->database:   запрос данных в БД\nпользователем OSD_DM_ETL_LOADER
+activate FrameworkEtl
+database->FrameworkEtl:   ответ БД
+FrameworkEtl->FrameworkEtl: форирование отчета Excel
+FrameworkEtl->database2: запись отчета в БД (blob)
+deactivate FrameworkEtl
+database2->nikastartlink: response с отчетом  Excel
+nikastartlink-->user:  отчет-выгрузка Excel для пользователя 
+deactivate nikastartlink
+@enduml

@@ -1,0 +1,47 @@
+@startuml
+actor "Пользователь" as user order 10
+
+
+participant "<b>МПСО/СИГМА</b>\n(Cognos)\n0409053.AFL_GRAPH Отображение сведений\nо связанных лицах в виде графа-МПСО_ДСП" as mpsoRepLink order 20
+database "<b>OLTP</b>\n(схема: OSD_DM)\n(таблица: BO_EXT_DATAMART_LOADED)" as osdDmDatabase order 30
+participant "<b>НИКА ФРОНТЭНД</b>\n(барузер пользователя, js + D3.js)" as nikaFront order 40
+participant "<b>БЭКЭНД</b>\n(миросервис, java + spring)" as nikaBack order 50
+database "<b>DM</b>\n(схема: prdn_DM_RCO_DATA)\n(таблицы: BO_AFL_GRAPH_HEADER\nBO_AFL_GRAPH_EDGE\nBO_AFL_GRAPH_VERTEX)\nKHD" as dmDatabase order 60
+
+
+user->mpsoRepLink: Запуск отчета-прослойки в интрефейсе МПСО
+activate mpsoRepLink 
+
+mpsoRepLink -> osdDmDatabase:обращение к таблице по ID отчета для получения ссылки на НИКА
+activate osdDmDatabase
+alt отчет уже перегружен и ссылка существует
+osdDmDatabase -> mpsoRepLink:ответ из базы
+deactivate osdDmDatabase
+mpsoRepLink->user:страница со ссылкой для пехода в НИКА
+user->nikaFront:переход по ссылке в НИКА с ID отчета (URL-report\{ID_SOURCE})\nhttp://10.1.6.28:10000/graph-analytics/1235573
+activate nikaFront
+else отчет еще не перегружен и ссылка не существует
+mpsoRepLink->user:страница с сообщением о том, что ссылки нет\nи формирование визуализации в настоящее время невозможно
+end
+deactivate mpsoRepLink
+
+nikaFront->nikaBack:маршрутизация запроса к микросервису
+activate nikaBack
+nikaBack->dmDatabase:запрос к БД на чтение данных в таблицах
+activate dmDatabase
+dmDatabase->nikaBack:ответ БД
+deactivate dmDatabase
+nikaBack->nikaBack:обработка данных
+
+nikaBack->nikaFront:передача данных для визуализации
+deactivate nikaBack
+nikaFront->nikaFront:js обработка и отрисовка
+
+nikaFront->user:загрузка визуализации
+loop до закрытия страницы
+            user->nikaFront:действия пользователя: задание фильтров, поиск, ит.п
+            nikaFront->user:обновление визуализации
+end
+deactivate nikaFront
+
+@enduml
