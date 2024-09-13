@@ -40,6 +40,7 @@ nikaFront->nikaFront:js обработка и отрисовка
 nikaFront->user:загрузка визуализации
 loop до закрытия страницы
             user->nikaFront:действия пользователя: задание фильтров, поиск, ит.п
+            nikaFront->nikaFront:js обработка и отрисовка
             nikaFront->user:обновление визуализации
 end
 deactivate nikaFront
