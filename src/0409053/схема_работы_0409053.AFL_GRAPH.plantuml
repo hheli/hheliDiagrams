@@ -17,7 +17,7 @@ activate osdDmDatabase
 alt отчет уже перегружен и ссылка существует
 osdDmDatabase -> mpsoRepLink:ответ из базы
 deactivate osdDmDatabase
-mpsoRepLink->user:страница со ссылкой для пехода в НИКА
+mpsoRepLink->user:страница со ссылкой для перехода в НИКА
 user->nikaFront:переход по ссылке в НИКА с ID отчета (URL-report\{ID_SOURCE})\nhttp://10.1.6.28:10000/graph-analytics/1235573
 activate nikaFront
 else отчет еще не перегружен и ссылка не существует
